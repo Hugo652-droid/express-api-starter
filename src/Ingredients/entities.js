@@ -1,11 +1,11 @@
-// Pizzas/entities.js
+// Ingredients/entities.js
 const db = require('./database');
 
 class Entities {
     static create({ name, imageUrl, price }) {
-        const sql = `INSERT INTO pizzas (name, imageUrl, price, created_at, updated_at)
-                 VALUES (?, ?, ?, datetime('now'), datetime('now'))`;
-        const params = [name, imageUrl || null, price];
+        const sql = `INSERT INTO ingredients (name)
+                 VALUES (?)`;
+        const params = [name];
 
         return new Promise((resolve, reject) => {
             db.run(sql, params, function (err) {
@@ -17,7 +17,7 @@ class Entities {
     }
 
     static findAll() {
-        const sql = `SELECT * FROM pizzas ORDER BY id DESC`;
+        const sql = `SELECT * FROM ingredients ORDER BY id DESC`;
         return new Promise((resolve, reject) => {
             db.all(sql, [], (err, rows) => {
                 if (err) return reject(err);
@@ -27,7 +27,7 @@ class Entities {
     }
 
     static findById(id) {
-        const sql = `SELECT * FROM pizzas WHERE id = ?`;
+        const sql = `SELECT * FROM ingredients WHERE id = ?`;
         return new Promise((resolve, reject) => {
             db.get(sql, [id], (err, row) => {
                 if (err) return reject(err);
@@ -36,16 +36,13 @@ class Entities {
         });
     }
 
-    static update(id, { name, imageUrl, price }) {
+    static update(id, { name }) {
         const sql = `
-      UPDATE pizzas
+      UPDATE ingredients
       SET name = COALESCE(?, name),
-          imageUrl = COALESCE(?, imageUrl),
-          price = COALESCE(?, price),
-          updated_at = datetime('now')
       WHERE id = ?
     `;
-        const params = [name, imageUrl, price, id];
+        const params = [name, id];
 
         return new Promise((resolve, reject) => {
             db.run(sql, params, function (err) {
@@ -57,7 +54,7 @@ class Entities {
     }
 
     static delete(id) {
-        const sql = `DELETE FROM pizzas WHERE id = ?`;
+        const sql = `DELETE FROM ingredients WHERE id = ?`;
         return new Promise((resolve, reject) => {
             db.run(sql, [id], function (err) {
                 if (err) return reject(err);
