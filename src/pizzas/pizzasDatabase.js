@@ -1,4 +1,4 @@
-// pizzas/ingredientsDatabase.js
+// pizzas/pizzasDatabase.js
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
@@ -17,7 +17,7 @@ const db = new sqlite3.Database(dbFile, (err) => {
 const initSql = `
 CREATE TABLE IF NOT EXISTS pizzas (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
+  name TEXT NOT NULL UNIQUE,
   imageUrl TEXT,
   price REAL NOT NULL,
   created_at TEXT DEFAULT (datetime('now')),
