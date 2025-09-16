@@ -1,7 +1,7 @@
-// Ingredients/routes.js
+// ingredients/ingredientsRoutes.js
 const express = require('express');
 const { body, param } = require('express-validator');
-const ingredientController = require('./controller');
+const ingredientController = require('./ingredientsController');
 
 const router = express.Router();
 
