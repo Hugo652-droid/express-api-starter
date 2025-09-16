@@ -60,8 +60,8 @@ exports.update = async (req, res, next) => {
         const id = Number(req.params.id);
         if (Number.isNaN(id)) return res.status(400).json({ error: 'Invalid ingredient id' });
 
-        const { name, price } = req.body;
-        const updated = await Ingredient.update(id, { name, price });
+        const { name } = req.body;
+        const updated = await Ingredient.update(id, { name });
         if (!updated) return res.status(404).json({ error: 'ingredient not found' }); // 404 Not Found
 
         return res.status(200).json(updated);

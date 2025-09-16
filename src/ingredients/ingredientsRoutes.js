@@ -23,12 +23,9 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - name
- *               - price
  *             properties:
  *               name:
  *                 type: string
- *               price:
- *                 type: number
  *     responses:
  *       201:
  *         description: Ingredient created
@@ -69,8 +66,6 @@ const router = express.Router();
  *             properties:
  *               name:
  *                 type: string
- *               price:
- *                 type: number
  *     responses:
  *       200:
  *         description: Ingredient updated

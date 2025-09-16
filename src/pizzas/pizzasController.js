@@ -2,6 +2,23 @@
 const { validationResult } = require('express-validator');
 const Pizza = require('./Pizza');
 
+const axios = require('axios');
+require('dotenv').config();
+const port = process.env.PORT || 3000;
+
+const apiIngredients = axios.create({
+    baseURL: `https://localhost:${port}/api/v1/` // Remplacez par votre URL d'API
+});
+
+const getIngredients = async () => {
+    try {
+        const response = await apiIngredients.get(`/ingredients`);
+        return response.data;
+    } catch (error) {
+        return false
+    }
+};
+
 /**
  * Controller functions use Express (req, res) signatures and
  * respond with status codes matching MDN/HTTP recommendations.
@@ -16,8 +33,18 @@ exports.create = async (req, res, next) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name, imageUrl, price } = req.body;
-        const created = await Pizza.create({ name, imageUrl, price });
+        const { name, imageUrl, price, ingredients } = req.body;
+
+        const allIngredients = await getIngredients()
+        console.log(allIngredients)
+        for (let idIngredient of ingredients) {
+            for (let ingredient of allIngredients) {
+                if (idIngredient === ingredient) {
+                    return res.status(400).json({"errors": "Ingredient not found"});
+                }
+            }
+        }
+        const created = await Pizza.create({ name, imageUrl, price, ingredients });
         // 201 Created
         return res.status(201).json(created);
     } catch (err) {

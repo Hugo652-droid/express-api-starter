@@ -2,10 +2,10 @@
 const db = require('./ingredientsDatabase');
 
 class Ingredients {
-    static create({ name, price }) {
-        const sql = `INSERT INTO ingredients (name, price, created_at, updated_at)
-                     VALUES (?, ?, datetime('now'), datetime('now'))`;
-        const params = [name, price];
+    static create({ name }) {
+        const sql = `INSERT INTO ingredients (name, created_at, updated_at)
+                     VALUES (?, datetime('now'), datetime('now'))`;
+        const params = [name];
 
         return new Promise((resolve, reject) => {
             db.run(sql, params, function (err) {
@@ -40,7 +40,6 @@ class Ingredients {
         const sql = `
       UPDATE ingredients
       SET name = COALESCE(?, name),
-          price = COALESCE(?, price),
           updated_at = datetime('now')
       WHERE id = ?
     `;
