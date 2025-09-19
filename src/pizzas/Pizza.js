@@ -1,6 +1,6 @@
 // pizzas/Pizza.js
 const db_pizzas = require('./pizzasDatabase');
-const db_pizzaHasIngredients = require('./pizzaHasIngredientDatabase');
+const PizzaHasIngredients = require('./PizzaHasIngredient');
 
 class Pizza {
     static create({ name, imageUrl, price, ingredients }) {
@@ -17,16 +17,8 @@ class Pizza {
                     Pizza.findById(lastID).then(resolve).catch(reject);
                 });
             });
-            let createdPizzaIngredients = []
             for (let ingredientId in ingredients) {
-                const sql = `INSERT INTO pizza_has_igredient (id_pizza, id_ingredient)
-                             VALUES (?, ?);`
-                const params = [lastID, ingredientId];
-                createdPizzaIngredients.push(new Promise((resolve, reject) => {
-                    db_pizzaHasIngredients.run(sql, params, function (err) {
-                        if (err) return reject(err);
-                    })
-                }))
+                PizzaHasIngredients.create(lastID, ingredientId).then(resolve).catch(reject);
             }
             return created;
         }
