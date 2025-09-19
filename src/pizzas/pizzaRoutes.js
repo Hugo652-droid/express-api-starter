@@ -31,6 +31,8 @@ const router = express.Router();
  *                 type: string
  *               price:
  *                 type: number
+ *               ingredients:
+ *                 type: list number
  *     responses:
  *       201:
  *         description: Pizza created
@@ -75,6 +77,8 @@ const router = express.Router();
  *                 type: string
  *               price:
  *                 type: number
+ *               ingredients:
+ *                 type: list number
  *     responses:
  *       200:
  *         description: Pizza updated
@@ -104,6 +108,7 @@ const createAndUpdateValidations = [
     body('name').isString().notEmpty().withMessage('name is required'),
     body('imageUrl').optional().isString().isURL().withMessage('imageUrl must be a valid URL'),
     body('price').isFloat({ gt: 0 }).withMessage('price must be a positive number'),
+    body('ingredients').isArray().notEmpty().withMessage('ingredients must be a ids list'),
 ];
 
 router.get('/', pizzaController.findAll);

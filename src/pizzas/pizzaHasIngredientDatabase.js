@@ -1,9 +1,9 @@
-// ingredients/ingredientsDatabase.js
+// pizzas/pizzaHasIngredientsDatabase.js
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
 
-const dbFile = process.env.DB_FILE_INGREDIENTS || path.join(__dirname, '..', 'dev.sqlite');
+const dbFile = process.env.DB_FILE || path.join(__dirname, '..', 'dev.sqlite');
 
 const db = new sqlite3.Database(dbFile, (err) => {
     if (err) {
@@ -13,13 +13,12 @@ const db = new sqlite3.Database(dbFile, (err) => {
     console.log('Connected to sqlite database:', dbFile);
 });
 
-// Initialize ingredients table if not exists
+// Initialize pizzas table if not exists
 const initSql = `
-CREATE TABLE IF NOT EXISTS ingredients (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL UNIQUE,
-  created_at TEXT DEFAULT (datetime('now')),
-  updated_at TEXT DEFAULT (datetime('now'))
+CREATE TABLE IF NOT EXISTS pizza_has_igredient (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_pizza INTEGER NOT NULL,
+    id_ingredient INTEGER NOT NULL
 );
 `;
 
