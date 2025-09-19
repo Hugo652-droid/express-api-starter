@@ -7,36 +7,38 @@ class Pizza {
         const sql = `INSERT INTO pizzas (name, imageUrl, price, created_at, updated_at)
                  VALUES (?, ?, ?, datetime('now'), datetime('now'))`;
         const params = [name, imageUrl || null, price];
-
-        return new Promise((resolve, reject) => {
-            db_pizzas.run(sql, params, function (err) {
-                if (err) return reject(err);
-                // fetch created row
-                for (let ingredient in ingredients) {
-                    const sql = `INSERT INTO pizza_has_igredient (id_pizza, id_ingredient)
-                        VALUES (?, ?);`
-                    const params = [this.lastID, ingredient];
-
+        let lastID = 0
+        try {
+            let created = new Promise((resolve, reject) => {
+                db_pizzas.run(sql, params, function (err) {
+                    if (err) return reject(err);
+                    // fetch created row
+                    lastID = this.lastID
+                    Pizza.findById(lastID).then(resolve).catch(reject);
+                });
+            });
+            let createdPizzaIngredients = []
+            for (let ingredientId in ingredients) {
+                const sql = `INSERT INTO pizza_has_igredient (id_pizza, id_ingredient)
+                             VALUES (?, ?);`
+                const params = [lastID, ingredientId];
+                createdPizzaIngredients.push(new Promise((resolve, reject) => {
                     db_pizzaHasIngredients.run(sql, params, function (err) {
                         if (err) return reject(err);
                     })
-
-                }
-
-                Pizza.findById(this.lastID).then(resolve).catch(reject);
-            });
-        });
+                }))
+            }
+            return created;
+        }
+        catch(err) {
+            return Promise.reject(err);
+        }
     }
 
     static findAll() {
-       const sql = `SELECT * FROM pizzas ORDER BY id DESC`;
-        const sql_pizzaHasIngredients = `SELECT * FROM pizza_has_igredient ORDER BY id DESC`;
+        const sql = `SELECT * FROM pizzas ORDER BY id DESC`;
         return new Promise((resolve, reject) => {
             db_pizzas.all(sql, [], (err, rows) => {
-                if (err) return reject(err);
-                resolve(rows);
-            });
-            db_pizzaHasIngredients.all(sql_pizzaHasIngredients, [], (err, rows) => {
                 if (err) return reject(err);
                 resolve(rows);
             });
@@ -44,7 +46,8 @@ class Pizza {
     }
 
     static findById(id) {
-        const sql = `SELECT * FROM pizzas WHERE id = ?`;
+        const sqlPizza = `SELECT * FROM pizzas WHERE id = ?`;
+        const sqlPizzaIngredients = `SELECT * FROM pizza_has_ingredient WHERE id_pizza = ?`;
         return new Promise((resolve, reject) => {
             db_pizzas.get(sql, [id], (err, row) => {
                 if (err) return reject(err);

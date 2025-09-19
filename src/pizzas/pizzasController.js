@@ -7,7 +7,7 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 
 const apiIngredients = axios.create({
-    baseURL: `https://localhost:${port}/api/v1/` // Remplacez par votre URL d'API
+    baseURL: `http://localhost:${port}/api/v1/` // Remplacez par votre URL d'API
 });
 
 const getIngredients = async () => {
@@ -36,13 +36,17 @@ exports.create = async (req, res, next) => {
         const { name, imageUrl, price, ingredients } = req.body;
 
         const allIngredients = await getIngredients()
-        console.log(allIngredients)
         for (let idIngredient of ingredients) {
+            let checkExistIdIngredient = false;
             for (let ingredient of allIngredients) {
-                if (idIngredient === ingredient) {
-                    return res.status(400).json({"errors": "Ingredient not found"});
+                if (idIngredient === ingredient['id']) {
+                    checkExistIdIngredient = true;
                 }
             }
+            if (!checkExistIdIngredient) {
+                return res.status(400).json({"errors": "Ingredient not found"});
+            }
+
         }
         const created = await Pizza.create({ name, imageUrl, price, ingredients });
         // 201 Created
@@ -55,8 +59,9 @@ exports.create = async (req, res, next) => {
 exports.findAll = async (req, res, next) => {
     try {
         const pizzas = await Pizza.findAll();
+        const ingredients = await getIngredients();
         // 200 OK
-        return res.status(200).json(pizzas);
+        return res.status(200).json(pizzas, ingredients);
     } catch (err) {
         next(err);
     }
