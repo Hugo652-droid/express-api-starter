@@ -2,7 +2,7 @@
 const db_pizzaHasIngredients = require('./pizzaHasIngredientDatabase');
 
 class PizzaHasIngredient {
-    static create({ id_pizza, id_ingredient }) {
+    static create(id_pizza, id_ingredient) {
         const sql = `INSERT INTO pizza_has_igredient (id_pizza, id_ingredient)
                          VALUES (?, ?);`
         const params = [id_pizza, id_ingredient];

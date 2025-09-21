@@ -13,7 +13,7 @@ const options = {
             { url: 'http://localhost:3000', description: 'Local dev server' }
         ]
     },
-    apis: ['./src/routes/*.js', './src/pizzas/*.js', "./src/ingredients/*.js"] // pick up JSDoc in routes/pizzas
+    apis: ['../src/routes/*.js', '../src/pizzas/*.js', "../src/ingredients/*.js"] // pick up JSDoc in routes/pizzas
 };
 
 const swaggerSpec = swaggerJSDoc(options);

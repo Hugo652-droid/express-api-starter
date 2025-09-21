@@ -41,7 +41,7 @@ class Pizza {
         const sqlPizza = `SELECT * FROM pizzas WHERE id = ?`;
         const sqlPizzaIngredients = `SELECT * FROM pizza_has_ingredient WHERE id_pizza = ?`;
         return new Promise((resolve, reject) => {
-            db_pizzas.get(sql, [id], (err, row) => {
+            db_pizzas.get(sqlPizza, [id], (err, row) => {
                 if (err) return reject(err);
                 resolve(row || null);
             });
@@ -63,7 +63,7 @@ class Pizza {
             db_pizzas.run(sql, params, function (err) {
                 if (err) return reject(err);
                 if (this.changes === 0) return resolve(null);
-                Pizza.findb_pizzasyId(id).then(resolve).catch(reject);
+                Pizza.findById(id).then(resolve).catch(reject);
             });
         });
     }
