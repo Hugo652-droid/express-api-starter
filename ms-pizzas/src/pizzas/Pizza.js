@@ -1,30 +1,19 @@
 // pizzas/Pizza.js
 const db_pizzas = require('./pizzasDatabase');
-const PizzaHasIngredients = require('./PizzaHasIngredient');
 
 class Pizza {
-    static create({ name, imageUrl, price, ingredients }) {
+    static create({ name, imageUrl, price }) {
         const sql = `INSERT INTO pizzas (name, imageUrl, price, created_at, updated_at)
                  VALUES (?, ?, ?, datetime('now'), datetime('now'))`;
         const params = [name, imageUrl || null, price];
-        let lastID = 0
-        try {
-            let created = new Promise((resolve, reject) => {
-                db_pizzas.run(sql, params, function (err) {
-                    if (err) return reject(err);
-                    // fetch created row
-                    lastID = this.lastID
-                    Pizza.findById(lastID).then(resolve).catch(reject);
-                });
+
+        return new Promise((resolve, reject) => {
+            db_pizzas.run(sql, params, function (err) {
+                if (err) return reject(err);
+                // fetch created row
+                Pizza.findById(this.lastID).then(resolve).catch(reject);
             });
-            for (let ingredientId in ingredients) {
-                PizzaHasIngredients.create(lastID, ingredientId).then(resolve).catch(reject);
-            }
-            return created;
-        }
-        catch(err) {
-            return Promise.reject(err);
-        }
+        });
     }
 
     static findAll() {
@@ -39,7 +28,6 @@ class Pizza {
 
     static findById(id) {
         const sqlPizza = `SELECT * FROM pizzas WHERE id = ?`;
-        const sqlPizzaIngredients = `SELECT * FROM pizza_has_ingredient WHERE id_pizza = ?`;
         return new Promise((resolve, reject) => {
             db_pizzas.get(sqlPizza, [id], (err, row) => {
                 if (err) return reject(err);

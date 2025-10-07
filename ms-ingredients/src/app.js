@@ -5,12 +5,13 @@ const router = require('./routes/router');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 
+// Creation de l'app express
 const app = express();
 
 app.use(morgan('dev'));
 app.use(express.json());
 
-// API routes
+// API routes [http://localhost:3000/]
 app.use('/api/v1', router);
 
 // Swagger UI

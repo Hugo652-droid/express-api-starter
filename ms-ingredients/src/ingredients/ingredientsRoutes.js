@@ -26,6 +26,8 @@ const router = express.Router();
  *             properties:
  *               name:
  *                 type: string
+ *               price:
+ *                 type: number
  *     responses:
  *       201:
  *         description: Ingredient created
@@ -66,6 +68,8 @@ const router = express.Router();
  *             properties:
  *               name:
  *                 type: string
+ *               price:
+ *                 type: number
  *     responses:
  *       200:
  *         description: Ingredient updated
@@ -89,16 +93,20 @@ const router = express.Router();
  */
 
 /**
- * Validation rules
+ * Les différantes contraintes d'entrer
  */
 const createAndUpdateValidations = [
     body('name').isString().notEmpty().withMessage('name is required'),
+    body('price').isFloat({ gt : 0 }).notEmpty().withMessage('price is required'),
 ];
 
-router.get('/', ingredientController.findAll);
-router.post('/', createAndUpdateValidations, ingredientController.create);
-router.get('/:id', [param('id').isInt().withMessage('id must be an integer')], ingredientController.findOne);
-router.put('/:id', [param('id').isInt().withMessage('id must be an integer'), ...createAndUpdateValidations], ingredientController.update);
-router.delete('/:id', [param('id').isInt().withMessage('id must be an integer')], ingredientController.delete);
+/**
+ * Les routes d'Ingredients [http://localhost:3000/api/v1/Ingredients]
+ */
+router.get('/', ingredientController.findAll); // Récupairation de tous les ingredients
+router.post('/', createAndUpdateValidations, ingredientController.create); // Creation d'un ingredients
+router.get('/:id', [param('id').isInt().withMessage('id must be an integer')], ingredientController.findOne); // Récupairation d'un ingrédients spécifique
+router.put('/:id', [param('id').isInt().withMessage('id must be an integer'), ...createAndUpdateValidations], ingredientController.update); // Modification d'un ingredient
+router.delete('/:id', [param('id').isInt().withMessage('id must be an integer')], ingredientController.delete); // Suppression d'un ingredient
 
 module.exports = router;
