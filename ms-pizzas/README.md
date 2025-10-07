@@ -35,7 +35,7 @@ A simple RESTful API to manage products (CRUD) built with **Express**, **SQLite3
     │       swagger.js
     │
     ├───controllers
-    │       pizzasController.js
+    │       pizzaHasIngredientController.js
     │
     ├───entities
     │       Ingredients.js

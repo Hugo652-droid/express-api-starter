@@ -1,29 +1,21 @@
 // pizzas/PizzaHasIngredient.js
-const db = require('./pizzasDatabase');
-const PizzaHasIngredient = require('../pizzaHasIngredient/PizzaHasIngredient')
+const db = require('./pizzasHasIngredientDatabase');
 
-class Pizza {
-    static create({ name, imageUrl, price, ingredients=null }) {
-        const sql = `INSERT INTO pizzas (name, imageUrl, price, created_at, updated_at)
-                VALUES (?, ?, ?, datetime('now'), datetime('now'))`;
-        const params = [name, imageUrl || null, price];
+class PizzaHasIngredient {
+    static create(pizza_id, ingredient_id) {
+        const sql = `INSERT INTO pizza_has_ingredient (pizza_id, ingredient_id)
+                 VALUES (?, ?)`;
+        const params = [pizza_id, ingredient_id];
 
         return new Promise((resolve, reject) => {
             db.run(sql, params, function (err) {
                 if (err) return reject(err);
-                // fetch created row
-                Pizza.findById(this.lastID).then(resolve).catch(reject);
             });
-            if (ingredients) {
-                PizzaHasIngredient.create({})
-            }
         });
-
-
     }
 
     static findAll() {
-        const sql = `SELECT * FROM pizzas ORDER BY id DESC`;
+        const sql = `SELECT * FROM pizza_has_ingredient ORDER BY id DESC`;
         return new Promise((resolve, reject) => {
             db.all(sql, [], (err, rows) => {
                 if (err) return reject(err);
@@ -33,7 +25,7 @@ class Pizza {
     }
 
     static findById(id) {
-        const sqlPizza = `SELECT * FROM pizzas WHERE id = ?`;
+        const sqlPizza = `SELECT * FROM pizza_has_ingredient WHERE id = ?`;
         return new Promise((resolve, reject) => {
             db.get(sqlPizza, [id], (err, row) => {
                 if (err) return reject(err);
@@ -42,28 +34,26 @@ class Pizza {
         });
     }
 
-    static update(id, { name, imageUrl, price }) {
+    static update(id, { pizza_id, ingredient_id }) {
         const sql = `
-      UPDATE pizzas
-      SET name = COALESCE(?, name),
-          imageUrl = COALESCE(?, imageUrl),
-          price = COALESCE(?, price),
-          updated_at = datetime('now')
-      WHERE id = ?
-    `;
-        const params = [name, imageUrl, price, id];
+          UPDATE pizza_has_ingredient
+          SET pizza_id = COALESCE(?, pizza_id),
+              ingredient_id = COALESCE(?, ingredient_id)
+          WHERE id = ?
+        `;
+        const params = [pizza_id, ingredient_id, id];
 
         return new Promise((resolve, reject) => {
             db.run(sql, params, function (err) {
                 if (err) return reject(err);
                 if (this.changes === 0) return resolve(null);
-                Pizza.findById(id).then(resolve).catch(reject);
+                PizzaHasIngredient.findById(id).then(resolve).catch(reject);
             });
         });
     }
 
     static delete(id) {
-        const sql = `DELETE FROM pizzas WHERE id = ?`;
+        const sql = `DELETE FROM pizza_has_ingredient WHERE id = ?`;
         return new Promise((resolve, reject) => {
             db.run(sql, [id], function (err) {
                 if (err) return reject(err);
@@ -73,4 +63,4 @@ class Pizza {
     }
 }
 
-module.exports = Pizza;
+module.exports = PizzaHasIngredient;

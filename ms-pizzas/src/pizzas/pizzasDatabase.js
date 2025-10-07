@@ -1,9 +1,9 @@
-// pizzas/pizzasDatabase.js
+// pizzas/pizzasHasIngredientDatabase.js
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
 
-const dbFile = process.env.DB_FILE || path.join(__dirname, '..', 'dev.sqlite');
+const dbFile = process.env.DB_FILE || path.join(__dirname, '../..', 'dev.sqlite');
 
 const db = new sqlite3.Database(dbFile, (err) => {
     if (err) {
