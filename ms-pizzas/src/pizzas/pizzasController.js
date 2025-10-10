@@ -1,7 +1,7 @@
 // pizzas/pizzaHasIngredientController.js
 const { validationResult } = require('express-validator');
 const Pizza = require('./Pizza');
-const services_pizzas = require('./PizzaServices');
+const services_pizzas = require('../services/PizzaServices');
 
 /**
  * Controller functions use Express (req, res) signatures and
