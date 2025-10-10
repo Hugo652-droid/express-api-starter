@@ -112,5 +112,6 @@ router.post('/', createAndUpdateValidations, pizzaController.create);
 router.get('/:id', [param('id').isInt().withMessage('id must be an integer')], pizzaController.findOne);
 router.put('/:id', [param('id').isInt().withMessage('id must be an integer'), ...createAndUpdateValidations], pizzaController.update);
 router.delete('/:id', [param('id').isInt().withMessage('id must be an integer')], pizzaController.delete);
+router.get('/:id/full', [param('id').isInt().withMessage('id must be an integer')], pizzaController.findOneWithIngredients);
 
 module.exports = router;

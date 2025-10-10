@@ -10,10 +10,10 @@ const options = {
             description: 'RESTful API for pizza management (SQLite, Express).'
         },
         servers: [
-            { url: 'http://localhost:3000', description: 'Local dev server' }
+            { url: 'http://localhost:3001', description: 'Local dev server' }
         ]
     },
-    apis: ['../routes/*.js', "../ingredients/*.js"] // pick up JSDoc in routes/pizzas
+    apis: ['./src/routes/*.js', "./src/ingredients/*.js"] // pick up JSDoc in routes/pizzas
 };
 
 const swaggerSpec = swaggerJSDoc(options);

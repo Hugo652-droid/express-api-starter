@@ -2,7 +2,7 @@
 const db = require('./pizzasHasIngredientDatabase');
 
 class PizzaHasIngredient {
-    static create(pizza_id, ingredient_id) {
+    static create({pizza_id, ingredient_id}) {
         const sql = `INSERT INTO pizza_has_ingredient (pizza_id, ingredient_id)
                  VALUES (?, ?)`;
         const params = [pizza_id, ingredient_id];
@@ -10,6 +10,8 @@ class PizzaHasIngredient {
         return new Promise((resolve, reject) => {
             db.run(sql, params, function (err) {
                 if (err) return reject(err);
+
+                PizzaHasIngredient.findById(this.lastID).then(resolve).catch(reject);
             });
         });
     }
@@ -24,6 +26,16 @@ class PizzaHasIngredient {
         })
     }
 
+    static findByIdPizza(pizza_id) {
+        const sqlPizza = `SELECT * FROM pizza_has_ingredient WHERE pizza_id = ?`;
+        return new Promise((resolve, reject) => {
+            db.all(sqlPizza, [pizza_id], (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows);
+            });
+        });
+    }
+
     static findById(id) {
         const sqlPizza = `SELECT * FROM pizza_has_ingredient WHERE id = ?`;
         return new Promise((resolve, reject) => {
@@ -34,14 +46,14 @@ class PizzaHasIngredient {
         });
     }
 
-    static update(id, { pizza_id, ingredient_id }) {
+    static update({ pizza_id, ingredient_id }) {
         const sql = `
           UPDATE pizza_has_ingredient
           SET pizza_id = COALESCE(?, pizza_id),
               ingredient_id = COALESCE(?, ingredient_id)
-          WHERE id = ?
+          WHERE pizza_id = ?
         `;
-        const params = [pizza_id, ingredient_id, id];
+        const params = [pizza_id, ingredient_id, pizza_id];
 
         return new Promise((resolve, reject) => {
             db.run(sql, params, function (err) {

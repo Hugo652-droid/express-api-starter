@@ -17,9 +17,11 @@ const db = new sqlite3.Database(dbFile, (err) => {
 const initSql = `
 CREATE TABLE IF NOT EXISTS pizza_has_ingredient (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    FOREIGN KEY (pizza_id) REFERENCES pizzas(id) ,
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ,
-    );
+    pizza_id INTEGER NOT NULL,
+    ingredient_id INTEGER NOT NULL,
+    FOREIGN KEY (pizza_id) REFERENCES pizzas(id) ON DELETE CASCADE,
+    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE CASCADE
+);
 `;
 
 db.serialize(() => {

@@ -14,12 +14,7 @@ class Pizza {
                 // fetch created row
                 Pizza.findById(this.lastID).then(resolve).catch(reject);
             });
-            if (ingredients) {
-                PizzaHasIngredient.create({})
-            }
         });
-
-
     }
 
     static findAll() {
